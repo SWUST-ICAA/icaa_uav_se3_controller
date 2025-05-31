@@ -1,0 +1,14 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/nanwan/Develop_Workplace/icaa_uav_se3_controller/devel/lib/python3/dist-packages",
+        "/home/nanwan/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/nanwan/Develop_Workplace/high_mpc"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/nanwan/Develop_Workplace/icaa_uav_se3_controller/devel/lib/python3/dist-packages",
+        "/home/nanwan/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/nanwan/Develop_Workplace/high_mpc"
+    ]
+}
