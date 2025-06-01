@@ -1,0 +1,14 @@
+<launch>
+
+	<node pkg="icaa_uav_se3_controller" type="icaa_uav_se3_controller_node" name="icaa_se3_ctrl" output="screen">
+		<!-- Remap odometry source -->
+		<remap from="~odom" to="/vins_fusion/imu_propagate" />
+		
+		<!-- Remap path command -->
+		<remap from="~trajectory_path" to="/trajectory_path" />
+
+		<!-- Load controller parameters -->
+		<rosparam command="load" file="$(find icaa_uav_se3_controller)/config/se3_controller_param.yaml" />
+	</node>
+ 
+</launch>

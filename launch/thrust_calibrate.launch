@@ -1,0 +1,9 @@
+<launch>
+
+	<node pkg="icaa_uav_se3_controller" name="thrust_calibrate" type="thrust_calibrate.py" output="screen">
+		<param name="time_interval" value="1.0" />
+		<param name="mass_kg" value="1.2" />
+		<param name="min_battery_voltage" value="13.2" />
+	</node>
+ 
+</launch>
