@@ -2,7 +2,7 @@
 
 [![ROS Version](https://img.shields.io/badge/ROS-Kinetic%20%7C%20Melodic%20%7C%20Noetic-blue.svg)](http://wiki.ros.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-4.0.0-brightgreen.svg)](https://github.com/SWUST-ICAA/icaa_uav_se3_controller/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)](https://github.com/SWUST-ICAA/icaa_uav_se3_controller/releases)
 
 A ROS package implementing SE3 geometric controller for multi-rotor UAVs using PX4 platform.
 
