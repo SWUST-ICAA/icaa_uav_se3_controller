@@ -1,0 +1,16 @@
+<launch>
+    <!-- Launch test path publisher -->
+    <node pkg="icaa_uav_se3_controller" type="test_path_publisher.py" name="test_path_publisher" output="screen">
+        <!-- Path type: circle, square, or figure8 -->
+        <param name="path_type" value="circle" />
+        
+        <!-- Path size (radius for circle, side length for square, size for figure8) -->
+        <param name="size" value="2.0" />
+        
+        <!-- Path height -->
+        <param name="height" value="1.0" />
+        
+        <!-- Publishing rate (Hz) -->
+        <param name="publish_rate" value="1.0" />
+    </node>
+</launch>

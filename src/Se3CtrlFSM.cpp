@@ -32,7 +32,7 @@ void SE3CtrlFSM::process()
 				ROS_ERROR("[SE3CtrlFSM] Reject AUTO_HOVER(L2). No odom!");
 				break;
 			}
-			if (cmd_is_received(now_time))
+			if (path_initialized && cmd_is_received(now_time))
 			{
 				ROS_ERROR("[SE3CtrlFSM] Reject AUTO_HOVER(L2). You are sending commands before toggling into AUTO_HOVER!");
 				break;
@@ -59,7 +59,7 @@ void SE3CtrlFSM::process()
 				ROS_ERROR("[SE3CtrlFSM] Reject AUTO_TAKEOFF. No odom!");
 				break;
 			}
-			if (cmd_is_received(now_time))
+			if (path_initialized && cmd_is_received(now_time))
 			{
 				ROS_ERROR("[SE3CtrlFSM] Reject AUTO_TAKEOFF. Stop sending commands now!");
 				break;
@@ -74,7 +74,9 @@ void SE3CtrlFSM::process()
 				ROS_ERROR("[SE3CtrlFSM] Reject AUTO_TAKEOFF. Drone is not landed!");
 				break;
 			}
-			if (rc_is_received(now_time))
+			
+			// For no_RC mode, skip RC checks
+			if (!param.takeoff_land.no_RC && rc_is_received(now_time))
 			{
 				if (!rc_data.is_hover_mode || !rc_data.is_command_mode || !rc_data.check_centered())
 				{
@@ -127,13 +129,13 @@ void SE3CtrlFSM::process()
 
 	case AUTO_HOVER:
 	{
-		if (!rc_data.is_hover_mode || !odom_is_received(now_time))
+		if ((!param.takeoff_land.no_RC && !rc_data.is_hover_mode) || !odom_is_received(now_time))
 		{
 			state = MANUAL_CTRL;
 			toggle_offboard_mode(false);
 			ROS_WARN("[SE3CtrlFSM] AUTO_HOVER(L2) --> MANUAL_CTRL(L1)");
 		}
-		else if (rc_data.is_command_mode && cmd_is_received(now_time))
+		else if ((param.takeoff_land.no_RC || rc_data.is_command_mode) && path_initialized && cmd_is_received(now_time))
 		{
 			if (state_data.current_state.mode == "OFFBOARD")
 			{
@@ -155,7 +157,10 @@ void SE3CtrlFSM::process()
 		}
 		else
 		{
-			set_hov_with_rc();
+			if (!param.takeoff_land.no_RC)
+			{
+				set_hov_with_rc();
+			}
 			des = get_hover_des();
 			if ((rc_data.enter_command_mode) ||
 				(takeoff_land.delay_trigger.first && now_time > takeoff_land.delay_trigger.second))
@@ -171,13 +176,13 @@ void SE3CtrlFSM::process()
 
 	case CMD_CTRL:
 	{
-		if (!rc_data.is_hover_mode || !odom_is_received(now_time))
+		if ((!param.takeoff_land.no_RC && !rc_data.is_hover_mode) || !odom_is_received(now_time))
 		{
 			state = MANUAL_CTRL;
 			toggle_offboard_mode(false);
 			ROS_WARN("[SE3CtrlFSM] CMD_CTRL(L3) --> MANUAL_CTRL(L1)!");
 		}
-		else if (!rc_data.is_command_mode || !cmd_is_received(now_time))
+		else if ((!param.takeoff_land.no_RC && !rc_data.is_command_mode) || !cmd_is_received(now_time))
 		{
 			state = AUTO_HOVER;
 			set_hov_with_odom();
@@ -228,13 +233,13 @@ void SE3CtrlFSM::process()
 
 	case AUTO_LAND:
 	{
-		if (!rc_data.is_hover_mode || !odom_is_received(now_time))
+		if ((!param.takeoff_land.no_RC && !rc_data.is_hover_mode) || !odom_is_received(now_time))
 		{
 			state = MANUAL_CTRL;
 			toggle_offboard_mode(false);
 			ROS_WARN("[SE3CtrlFSM] AUTO_LAND --> MANUAL_CTRL(L1)!");
 		}
-		else if (!rc_data.is_command_mode)
+		else if (!param.takeoff_land.no_RC && !rc_data.is_command_mode)
 		{
 			state = AUTO_HOVER;
 			set_hov_with_odom();
