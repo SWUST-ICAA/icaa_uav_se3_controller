@@ -287,7 +287,8 @@ void SE3CtrlFSM::process()
 	}
 
 	// STEP2: estimate thrust model
-	if (state == AUTO_HOVER || state == CMD_CTRL)
+	if (state == AUTO_HOVER || state == CMD_CTRL || 
+	    (state == AUTO_TAKEOFF && (now_time - takeoff_land.toggle_takeoff_land_time).toSec() > AutoTakeoffLand_t::MOTORS_SPEEDUP_TIME))
 	{
 		controller.estimateThrustModel(imu_data.a, param);
 	}
@@ -516,6 +517,7 @@ Desired_State_t SE3CtrlFSM::get_rotor_speed_up_des(const ros::Time now)
 	return des;
 }
 
+// Modified get_takeoff_land_des to include acceleration feedforward
 Desired_State_t SE3CtrlFSM::get_takeoff_land_des(const double speed)
 {
 	ros::Time now = ros::Time::now();
@@ -525,7 +527,15 @@ Desired_State_t SE3CtrlFSM::get_takeoff_land_des(const double speed)
 	Desired_State_t des;
 	des.p = takeoff_land.start_pose.head<3>() + Eigen::Vector3d(0, 0, speed * delta_t);
 	des.v = Eigen::Vector3d(0, 0, speed);
-	des.a = Eigen::Vector3d::Zero();
+	
+	// Add small acceleration feedforward for smoother takeoff
+	if (speed > 0 && delta_t < 1.0) {
+		// Ramp up acceleration during first second of takeoff
+		des.a = Eigen::Vector3d(0, 0, 0.5);
+	} else {
+		des.a = Eigen::Vector3d::Zero();
+	}
+	
 	des.j = Eigen::Vector3d::Zero();
 	des.yaw = takeoff_land.start_pose(3);
 	des.yaw_rate = 0.0;

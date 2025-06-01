@@ -129,7 +129,7 @@ def main():
     path_size = rospy.get_param('~size', 2.0)  # meters
     
     # Create publisher
-    path_pub = rospy.Publisher('/icaa_se3_ctrl/trajectory_path', Path, queue_size=10)
+    path_pub = rospy.Publisher('/trajectory_path', Path, queue_size=10)
     
     # Create path based on type
     if path_type == 'circle':
