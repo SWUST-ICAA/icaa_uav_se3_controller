@@ -1,0 +1,15 @@
+<launch>
+    <node pkg="icaa_uav_se3_controller" type="icaa_uav_se3_controller_node" name="icaa_se3_ctrl" output="screen">
+        <!-- Remap odometry source -->
+        <remap from="~odom" to="/mavros/odometry/in" />
+        
+        <!-- Remap path command -->
+        <remap from="~trajectory_path" to="/trajectory_path" />
+        
+        <!-- Remap takeoff/land command to be consistent -->
+        <remap from="~takeoff_land" to="takeoff_land" />
+
+        <!-- Load controller parameters -->
+        <rosparam command="load" file="$(find icaa_uav_se3_controller)/config/se3_controller_param.yaml" />
+    </node>
+</launch>

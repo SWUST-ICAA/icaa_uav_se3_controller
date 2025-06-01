@@ -2,7 +2,6 @@
 # ⭐⭐⭐  Set parameters carefully for satisfied performance!   ⭐⭐⭐ #
 #########################################################################
 
-# Basic parameters
 mass        : 1.2 # kg 
 gra         : 9.81 
 ctrl_freq_max   : 100.0
@@ -11,91 +10,66 @@ max_manual_vel: 1.0
 max_angle: 30  # Attitude angle limit in degree. A negative value means no limit.
 low_voltage: 13.2 # 4S battery
 
-# Path following parameters
-path_following:
-  lookahead_distance: 1.0 # meters
-  speed: 1.0 # m/s
-
-# RC reverse settings
-rc_reverse:
+rc_reverse: # *
     roll: false
     pitch: false
     yaw: false
     throttle: false
 
-# Auto takeoff and land
 auto_takeoff_land:
     enable: true
     enable_auto_arm: true
-    no_RC: false
+    no_RC: true
     takeoff_height: 1.0 # m
     takeoff_land_speed: 0.3 # m/s
 
-# Thrust model
-thrust_model:
-    print_value: false
-    accurate_thrust_model: false
-    K1: 0.7583
-    K2: 1.6942
-    K3: 0.6786
-    hover_percentage: 0.30
+thrust_model: # The model that maps thrust signal u(0~1) to real thrust force F(Unit:N)
+    print_value: false 
+    accurate_thrust_model: false  
+    K1: 0.7583 # Needs precise calibration!
+    K2: 1.6942 # Needs precise calibration!
+    K3: 0.6786 # Needs precise calibration!
+    hover_percentage: 0.55  
 
-# SE3 Controller gains
-se3_gains:
-    # Horizontal gains
-    horizontal:
-        kp: 3.0
-        kv: 2.0
-        ka: 1.0
-        kiw: 0.1      # world frame integral
-        kib: 0.1      # body frame integral
-        kiw_lim: 10.0 # integral limit
-        kib_lim: 10.0 # integral limit
-    
-    # Vertical gains
-    vertical:
-        kp: 15.0
-        kv: 8.0
-        ka: 1.0
-    
-    # Attitude gains
-    attitude:
-        kq_roll_pitch: 3.0
-        kq_yaw: 2.0
-    
-    # Attitude rate gains
-    attitude_rate:
-        kw_roll_pitch: 4.0
-        kw_yaw: 4.0
-    
-    # Mass estimator
+# SE3 Controller Gains
+se3_controller:
+    position_gains:
+        kp_xy: 3.0      # horizontal position P gain
+        kp_z: 15.0      # vertical position P gain
+        
+    velocity_gains:
+        kv_xy: 2.0      # horizontal velocity P gain
+        kv_z: 8.0       # vertical velocity P gain
+        
+    acceleration_gains:
+        ka_xy: 1.0      # horizontal acceleration feedforward gain
+        ka_z: 1.0       # vertical acceleration feedforward gain
+        
+    attitude_gains:
+        kq_roll_pitch: 3.0   # roll/pitch attitude gain
+        kq_yaw: 2.0          # yaw attitude gain
+        
+    attitude_rate_gains:
+        kw_roll_pitch: 4.0   # roll/pitch rate gain
+        kw_yaw: 4.0          # yaw rate gain
+        
+    integral_gains:
+        ki_xy_world: 0.1     # world frame xy integral gain
+        ki_xy_body: 0.1      # body frame xy integral gain
+        ki_xy_world_lim: 10.0  # world frame xy integral limit
+        ki_xy_body_lim: 10.0   # body frame xy integral limit
+        
     mass_estimator:
-        km: 1.0
-        km_lim: 3.0 # kg, at least 1/2 of the UAV mass
+        km: 1.0          # mass estimator gain
+        km_lim: 3.0      # mass estimator limit [kg]
+        
+    constraints:
+        tilt_angle_failsafe: 90.0  # [deg] failsafe tilt angle
+        throttle_saturation: 0.9   # throttle saturation limit
 
-# Constraints
-constraints:
-    throttle_saturation: 0.9 # [-], range from 0 to 1
-    tilt_angle_failsafe:
-        enabled: true
-        limit: 45.0 # [deg]
-
-# Gain filtering
-gain_filtering:
-    rate: 10.0 # [Hz]
-    perc_change_rate: 1.0 # [100%/s]
-    min_change_rate: 0.2 # perc of the difference
-    gain_mute_coefficient: 0.5 # [-]
-
-# Rampup
-rampup:
-    enabled: true
-    speed: 0.75 # [1/s]
-
-# Message timeouts
 msg_timeout:
     odom: 0.5
     rc:   0.5
-    path: 0.5
+    cmd:  0.5
     imu:  0.5
     bat:  0.5
