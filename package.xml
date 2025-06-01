@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>icaa_uav_se3_controller</name>
-  <version>4.0.0</version>
+  <version>1.0.0</version>
   <description>SE3 controller for multi-copters using PX4 platform</description>
   <maintainer email="nanwan2004@126.com">ICAA UAV Team</maintainer>
 
