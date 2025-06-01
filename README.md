@@ -1,5 +1,3 @@
-# icaa_uav_se3_controller
-The geometric tracking controller designed by SWUST Intelligent Control Algorithm and Application Group for the PX4 system is based on SE (3)
 # ICAA UAV SE3 Controller
 
 [![ROS Version](https://img.shields.io/badge/ROS-Kinetic%20%7C%20Melodic%20%7C%20Noetic-blue.svg)](http://wiki.ros.org/)
@@ -34,12 +32,7 @@ cd ~/catkin_ws/src
 git clone https://github.com/SWUST-ICAA/icaa_uav_se3_controller.git
 ```
 
-2. Install dependencies:
-```bash
-sudo apt-get install ros-$ROS_DISTRO-mavros ros-$ROS_DISTRO-mavros-extras
-```
-
-3. Build the package:
+2. Build the package:
 ```bash
 cd ~/catkin_ws
 catkin_make
